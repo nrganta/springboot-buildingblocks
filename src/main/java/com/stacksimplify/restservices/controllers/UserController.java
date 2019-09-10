@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,12 +31,13 @@ import com.stacksimplify.restservices.services.UserService;
 
 @RestController
 @Validated
+@RequestMapping(value="/users")
 public class UserController {
 	//Autowired the user service
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/users")
+	@GetMapping
 	public List<User> getAllUsers(){
 		
 		return userService.getAllUser();
@@ -44,7 +46,7 @@ public class UserController {
 	//create user method
 	//@Request body annotation
 	//PostMapping annotation
-	@PostMapping("/users")
+	@PostMapping
 	public ResponseEntity<Void> createUser(@Valid @RequestBody User user,UriComponentsBuilder builder) 
 	{
 		try
@@ -58,7 +60,7 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,eee.getMessage());
 		}
 	}
-	@GetMapping("/users/{id}")
+	@GetMapping("/{id}")
 	public Optional<User> getUserById(@PathVariable("id") @Min(1) Long id)
 	{
 		try
@@ -70,7 +72,7 @@ public class UserController {
 		}
 	
 	}
-	@PutMapping("/users/{id}")
+	@PutMapping("/{id}")
 	public User updateUser(@PathVariable("id") Long id,@RequestBody User user)
 	{
 		try {
@@ -81,12 +83,12 @@ public class UserController {
 		}
 		
 	}
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/{id}")
 	public void deleteUserById(@PathVariable("id") Long id)
 	{
 		 userService.deleteUserById(id);
 	}
-	@GetMapping("/users/byusername/{username}")
+	@GetMapping("/byusername/{username}")
 	public User getUserByUsername(@PathVariable("username") String username) throws UserNameNotFoundException {
 		User user= userService.getUserByUsername(username);
 		if(user == null)
